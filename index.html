@@ -1,0 +1,934 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>I'm Sorry 💔</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            overflow: hidden;
+            background: #fff5f7;
+        }
+
+        .pages-container {
+            width: 100vw;
+            height: 100vh;
+            position: relative;
+        }
+
+        .page {
+            width: 100vw;
+            height: 100vh;
+            position: absolute;
+            top: 0;
+            left: 0;
+            opacity: 0;
+            transition: opacity 0.8s ease-in-out;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .page.active {
+            opacity: 1;
+            z-index: 10;
+        }
+
+        /* ===== PAGE 1: LETTER ===== */
+        .page1 {
+            background: linear-gradient(135deg, #fff5f7 0%, #ffe4ec 100%);
+        }
+
+        .letter-card {
+            width: 90%;
+            max-width: 500px;
+            height: auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            padding: 40px;
+            animation: letterPop 1s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            text-align: center;
+        }
+
+        @keyframes letterPop {
+            0% {
+                transform: scale(0) rotateY(90deg);
+                opacity: 0;
+            }
+            50% {
+                transform: scale(1.05) rotateY(0deg);
+            }
+            100% {
+                transform: scale(1) rotateY(0deg);
+                opacity: 1;
+            }
+        }
+
+        .letter-content {
+            font-size: 18px;
+            color: #333;
+            line-height: 1.8;
+            animation: fadeIn 1.5s ease-in-out 0.5s both;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        .letter-emoji {
+            font-size: 60px;
+            margin-bottom: 20px;
+            animation: float 3s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+        }
+
+        /* ===== PAGE 2: SCRAPBOOK ===== */
+        .page2 {
+            background: linear-gradient(135deg, #fff9f5 0%, #ffe8e0 100%);
+        }
+
+        .scrapbook {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            perspective: 1000px;
+        }
+
+        .scrapbook-frame {
+            position: absolute;
+            width: 150px;
+            height: 150px;
+            background: white;
+            border: 8px solid #f0e68c;
+            border-radius: 5px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            cursor: pointer;
+            transition: transform 0.3s ease;
+            animation: frameFloat 6s ease-in-out infinite;
+        }
+
+        .scrapbook-frame:hover {
+            transform: scale(1.1);
+        }
+
+        @keyframes frameFloat {
+            0%, 100% { transform: translateY(0) rotate(-3deg); }
+            50% { transform: translateY(-20px) rotate(3deg); }
+        }
+
+        .frame-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 3px;
+        }
+
+        .frame-flip {
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, #ffb3d9 0%, #ff69b4 100%);
+            color: white;
+            font-size: 14px;
+            text-align: center;
+            padding: 15px;
+            border-radius: 3px;
+            opacity: 0;
+            transition: opacity 0.6s ease;
+            line-height: 1.4;
+            font-weight: 500;
+        }
+
+        .frame-flip.show {
+            opacity: 1;
+        }
+
+        .petals-falling {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            pointer-events: none;
+        }
+
+        .petal {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background: #ffb3d9;
+            border-radius: 50%;
+            opacity: 0.6;
+            animation: petalsfall linear infinite;
+        }
+
+        @keyframes petalsfall {
+            0% {
+                top: -10px;
+                opacity: 0.8;
+            }
+            100% {
+                top: 100vh;
+                opacity: 0;
+            }
+        }
+
+        .next-button {
+            position: absolute;
+            bottom: 50px;
+            left: 50%;
+            transform: translateX(-50%);
+            padding: 15px 40px;
+            background: linear-gradient(135deg, #ff69b4, #ffb3d9);
+            color: white;
+            border: none;
+            border-radius: 50px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 5px 20px rgba(255, 105, 180, 0.4);
+            transition: all 0.3s ease;
+            opacity: 0;
+            animation: slideUp 0.5s ease-in-out forwards;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateX(-50%) translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(-50%) translateY(0);
+            }
+        }
+
+        .next-button:hover {
+            transform: translateX(-50%) scale(1.05);
+            box-shadow: 0 8px 25px rgba(255, 105, 180, 0.6);
+        }
+
+        .next-button:active {
+            transform: translateX(-50%) scale(0.95);
+        }
+
+        /* ===== PAGE 3: ANIME SCENE ===== */
+        .page3 {
+            background: linear-gradient(180deg, #87ceeb 0%, #e0f6ff 50%, #90ee90 100%);
+            background-size: 100% 100%;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .scene-bg {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 600"><defs><linearGradient id="sky" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%25" style="stop-color:%2387ceeb;stop-opacity:1" /><stop offset="100%25" style="stop-color:%23e0f6ff;stop-opacity:1" /></linearGradient></defs><rect fill="url(%23sky)" width="1000" height="600"/><path d="M0 400 Q250 350 500 400 T1000 400 L1000 600 L0 600 Z" fill="%2390ee90"/></svg>');
+            background-size: cover;
+            z-index: 1;
+        }
+
+        .petals-anime {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            z-index: 2;
+            pointer-events: none;
+        }
+
+        .petal-anime {
+            position: absolute;
+            width: 8px;
+            height: 8px;
+            background: #ffb3d9;
+            border-radius: 50%;
+            opacity: 0.5;
+            animation: petalsfallAnime linear infinite;
+        }
+
+        @keyframes petalsfallAnime {
+            0% {
+                top: -10px;
+                opacity: 0.7;
+                transform: translateX(0);
+            }
+            100% {
+                top: 100vh;
+                opacity: 0;
+                transform: translateX(100px);
+            }
+        }
+
+        .anime-couple {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            z-index: 3;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .character {
+            width: 150px;
+            height: 250px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 80px;
+            margin: 0 40px;
+            animation: characterAppear 1s ease-out;
+        }
+
+        @keyframes characterAppear {
+            from {
+                opacity: 0;
+                transform: scale(0);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        .dialogue {
+            position: absolute;
+            background: white;
+            border: 2px solid #ff69b4;
+            border-radius: 20px;
+            padding: 15px 25px;
+            font-size: 18px;
+            color: #333;
+            font-weight: bold;
+            max-width: 200px;
+            animation: dialogueAppear 1s ease-in-out infinite;
+            z-index: 4;
+        }
+
+        @keyframes dialogueAppear {
+            0%, 100% {
+                opacity: 0;
+            }
+            50% {
+                opacity: 1;
+            }
+        }
+
+        .dialogue-boy {
+            top: 150px;
+            left: 50%;
+            transform: translateX(-50%);
+            animation: dialogueAppear 2s ease-in-out infinite;
+        }
+
+        .dialogue-girl {
+            top: 150px;
+            right: 50%;
+            transform: translateX(50%);
+            animation: dialogueAppear 2s ease-in-out 1s infinite;
+        }
+
+        .hearts {
+            position: absolute;
+            font-size: 30px;
+            animation: heartFloat 3s ease-in-out infinite;
+            z-index: 5;
+        }
+
+        @keyframes heartFloat {
+            0% {
+                opacity: 0;
+                transform: translateY(0);
+            }
+            50% {
+                opacity: 1;
+            }
+            100% {
+                opacity: 0;
+                transform: translateY(-100px);
+            }
+        }
+
+        .heart1 { animation-delay: 0s; left: 45%; top: 40%; }
+        .heart2 { animation-delay: 0.5s; left: 55%; top: 35%; }
+        .heart3 { animation-delay: 1s; left: 50%; top: 30%; }
+
+        .page3-buttons {
+            position: absolute;
+            bottom: 50px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 20px;
+            z-index: 10;
+            opacity: 0;
+            animation: fadeInDelay 0.5s ease-in-out 10s forwards;
+        }
+
+        @keyframes fadeInDelay {
+            from {
+                opacity: 0;
+                transform: translateX(-50%) translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(-50%) translateY(0);
+            }
+        }
+
+        .page3-buttons button {
+            padding: 12px 35px;
+            background: linear-gradient(135deg, #ff69b4, #ffb3d9);
+            color: white;
+            border: none;
+            border-radius: 50px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 5px 20px rgba(255, 105, 180, 0.4);
+            transition: all 0.3s ease;
+        }
+
+        .page3-buttons button:hover {
+            transform: scale(1.05);
+            box-shadow: 0 8px 25px rgba(255, 105, 180, 0.6);
+        }
+
+        /* ===== PAGE 4: LYRICS ON FRAMES ===== */
+        .page4 {
+            background: linear-gradient(135deg, #fff0f5 0%, #ffe4ec 100%);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .wall {
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, #ffeef8 0%, #fff5f7 50%, #ffeef8 100%);
+            position: relative;
+        }
+
+        .lyric-frame {
+            position: absolute;
+            width: 140px;
+            height: 160px;
+            background: white;
+            border: 6px solid;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 10px;
+            font-size: 13px;
+            color: #333;
+            font-weight: 500;
+            line-height: 1.4;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+            animation: frameAppear 0.8s ease-out forwards;
+        }
+
+        @keyframes frameAppear {
+            from {
+                opacity: 0;
+                transform: rotate(-10deg) scale(0.8);
+            }
+            to {
+                opacity: 1;
+                transform: rotate(0) scale(1);
+            }
+        }
+
+        .lyric-frame:nth-child(1) {
+            top: 80px;
+            left: 50px;
+            border-color: #ff69b4;
+            animation-delay: 0s;
+        }
+
+        .lyric-frame:nth-child(2) {
+            top: 100px;
+            left: 240px;
+            border-color: #ffb3d9;
+            animation-delay: 0.1s;
+        }
+
+        .lyric-frame:nth-child(3) {
+            top: 80px;
+            right: 50px;
+            border-color: #ff69b4;
+            animation-delay: 0.2s;
+        }
+
+        .lyric-frame:nth-child(4) {
+            top: 320px;
+            left: 100px;
+            border-color: #ffb3d9;
+            animation-delay: 0.3s;
+        }
+
+        .lyric-frame:nth-child(5) {
+            top: 320px;
+            left: 50%;
+            transform: translateX(-50%);
+            border-color: #ff69b4;
+            animation-delay: 0.4s;
+        }
+
+        .lyric-frame:nth-child(6) {
+            top: 320px;
+            right: 100px;
+            border-color: #ffb3d9;
+            animation-delay: 0.5s;
+        }
+
+        .lyric-frame:nth-child(7) {
+            bottom: 80px;
+            left: 150px;
+            border-color: #ff69b4;
+            animation-delay: 0.6s;
+        }
+
+        .lyric-frame:nth-child(8) {
+            bottom: 80px;
+            right: 150px;
+            border-color: #ffb3d9;
+            animation-delay: 0.7s;
+        }
+
+        .page4-sorry {
+            position: absolute;
+            top: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 48px;
+            font-weight: bold;
+            color: #ff69b4;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+            animation: fadeIn 1s ease-in-out;
+            z-index: 5;
+        }
+
+        .page4-next {
+            position: absolute;
+            bottom: 50px;
+            left: 50%;
+            transform: translateX(-50%);
+            padding: 15px 40px;
+            background: linear-gradient(135deg, #ff69b4, #ffb3d9);
+            color: white;
+            border: none;
+            border-radius: 50px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 5px 20px rgba(255, 105, 180, 0.4);
+            transition: all 0.3s ease;
+            opacity: 0;
+            animation: slideUp 0.5s ease-in-out 8s forwards;
+        }
+
+        .page4-next:hover {
+            transform: translateX(-50%) scale(1.05);
+        }
+
+        /* ===== PAGE 5: DREAM SCENE ===== */
+        .page5 {
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+        }
+
+        .desk-scene {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: flex-end;
+            justify-content: center;
+        }
+
+        .desk {
+            width: 80%;
+            height: 40%;
+            background: linear-gradient(180deg, #8b7355 0%, #5d4e37 100%);
+            border-radius: 20px 20px 0 0;
+            box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.5);
+            position: relative;
+        }
+
+        .sleeping-guy {
+            position: absolute;
+            width: 120px;
+            height: 120px;
+            font-size: 100px;
+            left: 50%;
+            top: -80px;
+            transform: translateX(-50%);
+            animation: sleepAnimation 3s ease-in-out infinite;
+        }
+
+        @keyframes sleepAnimation {
+            0%, 100% { transform: translateX(-50%) rotateZ(-5deg); }
+            50% { transform: translateX(-50%) rotateZ(-10deg); }
+        }
+
+        .zzz {
+            position: absolute;
+            font-size: 24px;
+            top: -60px;
+            left: 20px;
+            animation: floatAway 2s ease-in-out infinite;
+        }
+
+        @keyframes floatAway {
+            0% {
+                opacity: 1;
+                transform: translateY(0) translateX(0);
+            }
+            100% {
+                opacity: 0;
+                transform: translateY(-50px) translateX(20px);
+            }
+        }
+
+        .dream-bubble {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 400px;
+            height: 300px;
+            background: radial-gradient(circle at 30% 30%, rgba(255, 255, 255, 0.3), rgba(0, 0, 0, 0.1));
+            border: 3px dashed rgba(255, 200, 221, 0.5);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: space-around;
+            animation: dreamBubbleFloat 3s ease-in-out infinite;
+        }
+
+        @keyframes dreamBubbleFloat {
+            0%, 100% { transform: translate(-50%, -50%) scale(1); }
+            50% { transform: translate(-50%, -55%) scale(1.05); }
+        }
+
+        .dream-couple {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
+            z-index: 5;
+        }
+
+        .dream-character {
+            font-size: 60px;
+            animation: dreamHeartBeat 1.5s ease-in-out infinite;
+        }
+
+        @keyframes dreamHeartBeat {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+
+        .dream-eyes {
+            position: absolute;
+            font-size: 40px;
+            animation: eyeSparkle 2s ease-in-out infinite;
+        }
+
+        @keyframes eyeSparkle {
+            0%, 100% { opacity: 0.5; }
+            50% { opacity: 1; }
+        }
+
+        .sparkle {
+            position: absolute;
+            font-size: 12px;
+            animation: sparkleFloat 3s ease-in-out infinite;
+        }
+
+        @keyframes sparkleFloat {
+            0% {
+                opacity: 0;
+                transform: scale(0);
+            }
+            50% {
+                opacity: 1;
+            }
+            100% {
+                opacity: 0;
+                transform: scale(0) translateY(-30px);
+            }
+        }
+
+        .sparkle1 { top: 30%; left: 35%; animation-delay: 0s; }
+        .sparkle2 { top: 40%; left: 65%; animation-delay: 0.5s; }
+        .sparkle3 { top: 50%; left: 30%; animation-delay: 1s; }
+        .sparkle4 { top: 45%; right: 25%; animation-delay: 1.5s; }
+        .sparkle5 { top: 35%; right: 30%; animation-delay: 2s; }
+
+        .page5-text {
+            position: absolute;
+            top: 50px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: #ffb3d9;
+            font-size: 32px;
+            font-weight: bold;
+            text-align: center;
+            animation: fadeIn 1.5s ease-in-out;
+        }
+
+        /* ===== AUDIO ===== */
+        audio {
+            display: none;
+        }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 768px) {
+            .letter-card {
+                padding: 30px 20px;
+            }
+
+            .lyric-frame {
+                width: 110px;
+                height: 130px;
+                font-size: 11px;
+            }
+
+            .dream-bubble {
+                width: 300px;
+                height: 220px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <audio id="bgMusic" loop>
+        <source src="https://files.catbox.moe/ol3k2r.mp3" type="audio/mpeg">
+    </audio>
+
+    <div class="pages-container">
+        <!-- PAGE 1: LETTER -->
+        <div class="page page1 active">
+            <div class="letter-card">
+                <div class="letter-emoji">💌</div>
+                <div class="letter-content">
+                    <p style="font-size: 24px; font-weight: bold; margin-bottom: 20px;">I'm Sorry...</p>
+                    <p>I know I made mistakes and hurt you. Every moment away from you makes me realize how much you mean to me. I want to tell you everything my heart feels...</p>
+                </div>
+            </div>
+            <button class="next-button" onclick="nextPage()">Next →</button>
+        </div>
+
+        <!-- PAGE 2: SCRAPBOOK -->
+        <div class="page page2">
+            <div class="petals-falling" id="petalsContainer"></div>
+            <div id="framesContainer" style="width: 100%; height: 100%; position: relative;"></div>
+            <button class="next-button" id="page2Next" style="animation-delay: 10s; opacity: 0;" onclick="nextPage()">Next →</button>
+        </div>
+
+        <!-- PAGE 3: ANIME SCENE -->
+        <div class="page page3">
+            <div class="scene-bg"></div>
+            <div class="petals-anime" id="petalsAnime"></div>
+            <div class="anime-couple">
+                <div class="character" style="opacity: 0; animation: characterAppear 1s ease-out 0.5s forwards;">👰</div>
+                <div class="character" style="opacity: 0; animation: characterAppear 1s ease-out 1s forwards;">🤵</div>
+            </div>
+            <div class="dialogue dialogue-girl" style="animation-delay: 2s;">Leave me...</div>
+            <div class="dialogue dialogue-boy" style="animation-delay: 3s;">Never! 💕</div>
+            <div class="hearts heart1">❤️</div>
+            <div class="hearts heart2">💗</div>
+            <div class="hearts heart3">💖</div>
+            <div class="page3-buttons">
+                <button onclick="replyMessage()">💬 Reply</button>
+                <button onclick="nextPage()">Next →</button>
+            </div>
+        </div>
+
+        <!-- PAGE 4: LYRICS -->
+        <div class="page page4">
+            <div class="page4-sorry">😢 I'm Sorry 😢</div>
+            <div class="wall">
+                <div class="lyric-frame">Every moment without you feels empty</div>
+                <div class="lyric-frame">My heart aches for you</div>
+                <div class="lyric-frame">Forgive me please</div>
+                <div class="lyric-frame">You're my everything</div>
+                <div class="lyric-frame">I love you 💕</div>
+                <div class="lyric-frame">Can't live without you</div>
+                <div class="lyric-frame">Forever yours</div>
+                <div class="lyric-frame">Always & Always</div>
+            </div>
+            <button class="page4-next" onclick="nextPage()">Next →</button>
+        </div>
+
+        <!-- PAGE 5: DREAM SCENE -->
+        <div class="page page5">
+            <div class="page5-text">Dreaming of you... 💭</div>
+            <div class="dream-bubble">
+                <div class="sparkle sparkle1">✨</div>
+                <div class="sparkle sparkle2">✨</div>
+                <div class="sparkle sparkle3">✨</div>
+                <div class="sparkle sparkle4">✨</div>
+                <div class="sparkle sparkle5">✨</div>
+                <div class="dream-couple">
+                    <div class="dream-character">👩</div>
+                    <div class="dream-character">👨</div>
+                </div>
+            </div>
+            <div class="desk-scene">
+                <div class="sleeping-guy">
+                    😴
+                    <div class="zzz">Z</div>
+                </div>
+                <div class="desk"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentPage = 1;
+        const totalPages = 5;
+        const framesData = [
+            { id: 1, img: 'https://i.ibb.co/sk5jsv4/IMG-9466.jpg', msg: 'Remember this moment?' },
+            { id: 2, img: 'https://i.ibb.co/BKZTTdL4/IMG-2256.jpg', msg: 'You were so beautiful' },
+            { id: 3, img: 'https://i.ibb.co/dsJsT8Zk/98ba4001-e267-49c5-83e9-69a4979e1ed1.jpg', msg: 'I miss you' },
+            { id: 4, img: 'https://i.ibb.co/GQyJTVPq/939b3a43-cfeb-4486-a9b0-dc0daca955eb.jpg', msg: 'Your smile lights up my world' },
+            { id: 5, img: 'https://i.ibb.co/5W5z6Nkd/IMG-5851.jpg', msg: 'Forever in my heart' },
+            { id: 6, img: 'https://i.ibb.co/2YL59CnM/498e307b-bad3-4b7c-9773-b6be69d21163.jpg', msg: 'Come back to me' },
+            { id: 7, img: 'https://i.ibb.co/SXtrHYb9/3293e8ec-0ace-4f9b-a5b8-198f2957542e.jpg', msg: 'I love you' },
+            { id: 8, img: 'https://i.ibb.co/KzwVVD4t/69866bed-8a0e-4f29-9d1c-1984055ea4c6.jpg', msg: 'Please forgive me' }
+        ];
+
+        // Initialize audio
+        const bgMusic = document.getElementById('bgMusic');
+        bgMusic.volume = 0.3;
+        bgMusic.play().catch(e => console.log('Audio play failed:', e));
+
+        // Initialize page 2 frames
+        function initFrames() {
+            const container = document.getElementById('framesContainer');
+            container.innerHTML = '';
+            
+            framesData.forEach((frame, index) => {
+                const positions = [
+                    { top: '50px', left: '50px' },
+                    { top: '60px', left: '230px' },
+                    { top: '40px', right: '60px' },
+                    { top: '300px', left: '100px' },
+                    { top: '280px', left: '50%', transform: 'translateX(-50%)' },
+                    { top: '300px', right: '100px' },
+                    { bottom: '80px', left: '150px' },
+                    { bottom: '80px', right: '150px' }
+                ];
+                
+                const pos = positions[index];
+                const frameEl = document.createElement('div');
+                frameEl.className = 'scrapbook-frame';
+                frameEl.style.top = pos.top || 'auto';
+                frameEl.style.bottom = pos.bottom || 'auto';
+                frameEl.style.left = pos.left || 'auto';
+                frameEl.style.right = pos.right || 'auto';
+                if (pos.transform) frameEl.style.transform = pos.transform;
+                frameEl.style.animationDelay = (index * 0.3) + 's';
+                
+                const img = document.createElement('img');
+                img.className = 'frame-img';
+                img.src = frame.img;
+                img.onerror = function() {
+                    this.style.background = 'linear-gradient(135deg, #ffb3d9, #ff69b4)';
+                };
+                
+                const flipMsg = document.createElement('div');
+                flipMsg.className = 'frame-flip';
+                flipMsg.textContent = frame.msg;
+                
+                frameEl.appendChild(img);
+                frameEl.appendChild(flipMsg);
+                
+                frameEl.addEventListener('click', function() {
+                    flipMsg.classList.toggle('show');
+                    setTimeout(() => {
+                        flipMsg.classList.remove('show');
+                    }, 3000);
+                });
+                
+                container.appendChild(frameEl);
+            });
+
+            // Show next button after 10s
+            setTimeout(() => {
+                document.getElementById('page2Next').style.opacity = '1';
+                document.getElementById('page2Next').style.animation = 'slideUp 0.5s ease-in-out forwards';
+            }, 10000);
+        }
+
+        // Create falling petals
+        function createPetals(containerId, count = 10) {
+            const container = document.getElementById(containerId);
+            if (!container) return;
+            
+            for (let i = 0; i < count; i++) {
+                const petal = document.createElement('div');
+                petal.className = containerId === 'petalsContainer' ? 'petal' : 'petal-anime';
+                petal.style.left = Math.random() * 100 + '%';
+                petal.style.animationDuration = (3 + Math.random() * 3) + 's';
+                petal.style.animationDelay = Math.random() * 2 + 's';
+                container.appendChild(petal);
+            }
+        }
+
+        // Page navigation
+        function nextPage() {
+            if (currentPage < totalPages) {
+                document.querySelector('.page.active').classList.remove('active');
+                currentPage++;
+                document.querySelectorAll('.page')[currentPage - 1].classList.add('active');
+            }
+        }
+
+        function replyMessage() {
+            alert('💕 Thank you for listening to my heart! 💕\n\nI promise to be better and cherish every moment with you!');
+        }
+
+        // Initialize on load
+        window.addEventListener('load', () => {
+            initFrames();
+            createPetals('petalsContainer', 15);
+            createPetals('petalsAnime', 20);
+        });
+
+        // Allow page skip with keyboard
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight' && currentPage < totalPages) nextPage();
+            if (e.key === 'ArrowLeft' && currentPage > 1) {
+                document.querySelector('.page.active').classList.remove('active');
+                currentPage--;
+                document.querySelectorAll('.page')[currentPage - 1].classList.add('active');
+            }
+        });
+    </script>
+</body>
+</html>
